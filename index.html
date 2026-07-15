@@ -5,9 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Control de Registros</title>
     <style>
+        :root {
+            /* Paleta de colores principal */
+            --color-primario: rgb(30, 91, 79);
+            --color-secundario: rgb(156, 35, 72);
+            --color-secundario-hover: rgb(120, 25, 55);
+            --color-exito: #2e7d32;
+            --color-exito-hover: #1b5e20;
+            --color-info: #0288d1;
+            --color-info-hover: #01579b;
+            --color-peligro: #c62828;
+            --color-gris-oscuro: #37474f;
+            --color-fondo: #f4f6f8;
+            --sombra-tarjeta: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: rgb(30, 91, 79); 
+            background-color: var(--color-primario);
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -16,25 +31,35 @@
             min-height: 100vh;
             padding: 20px 0;
         }
+
         .tarjeta {
             background: white;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: var(--sombra-tarjeta);
             text-align: center;
             width: 95%;
             max-width: 950px;
             margin-bottom: 20px;
         }
+
         .logo-app { 
             width: 50%; 
+            max-width: 300px;
             height: auto; 
             margin-bottom: 20px;
         }
+
         #login-section { display: block; max-width: 400px; margin: 0 auto; }
         #app-section { display: none; }
         
-        .sub-panel { display: none; border-top: 2px solid #eee; margin-top: 20px; padding-top: 20px; text-align: left; }
+        .sub-panel { 
+            display: none; 
+            border-top: 2px solid #eee; 
+            margin-top: 20px; 
+            padding-top: 20px; 
+            text-align: left; 
+        }
         
         .controles-busqueda, .form-edicion, .form-admin {
             display: flex;
@@ -44,32 +69,60 @@
             flex-wrap: wrap;
             margin-top: 15px;
         }
-        .form-edicion { flex-direction: column; max-width: 600px; margin: 15px auto 0 auto; }
+
+        .form-edicion { 
+            flex-direction: column; 
+            max-width: 600px; 
+            margin: 15px auto 0 auto; 
+        }
         
-        input, select, button, textarea { padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; }
+        input, select, button, textarea { 
+            padding: 12px; 
+            font-size: 16px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            outline: none;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--color-primario);
+        }
+
         textarea { resize: vertical; font-family: inherit; }
         
-        button { background-color: rgb(156, 35, 72); color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        button:hover { background-color: rgb(120, 25, 55); }
+        button { 
+            background-color: var(--color-secundario); 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: background 0.3s, opacity 0.3s; 
+        }
+
+        button:hover:not(:disabled) { background-color: var(--color-secundario-hover); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         
-        .btn-add { background-color: #2e7d32; }
-        .btn-add:hover { background-color: #1b5e20; }
-        .btn-send-block { background-color: #0288d1; width: 100%; font-size: 18px; margin-top: 15px; }
-        .btn-send-block:hover { background-color: #01579b; }
+        .btn-add { background-color: var(--color-exito); }
+        .btn-add:hover:not(:disabled) { background-color: var(--color-exito-hover); }
+        
+        .btn-send-block { background-color: var(--color-info); width: 100%; font-size: 18px; margin-top: 15px; }
+        .btn-send-block:hover:not(:disabled) { background-color: var(--color-info-hover); }
+        
         .btn-logout { background-color: #555; width: 100%; margin-top: 30px;}
-        .btn-logout:hover { background-color: #333; }
+        .btn-logout:hover:not(:disabled) { background-color: #333; }
         
         .panel-bloqueo { background-color: #ffebee; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px; margin-top: 20px; }
         .panel-bitacora { background-color: #f5f5f5; border: 1px solid #e0e0e0; padding: 20px; border-radius: 8px; }
 
         .contenedor-tabla { overflow-x: auto; margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        
         table { width: 100%; border-collapse: collapse; font-size: 14px; background: white; }
-        th { background: rgb(30, 91, 79); color: white; padding: 12px; text-transform: uppercase; }
+        th { background: var(--color-primario); color: white; padding: 12px; text-transform: uppercase; }
         td { padding: 10px; border-bottom: 1px solid #eee; white-space: nowrap; color: #333;}
         tr:hover { background-color: #f1f8e9; }
         
-        .tabla-lote th { background: #37474f; }
-        .btn-del { background: #c62828; padding: 5px 10px; font-size: 12px; }
+        .tabla-lote th { background: var(--color-gris-oscuro); }
+        .btn-del { background: var(--color-peligro); padding: 5px 10px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -79,11 +132,11 @@
         <img src="Imagen11.png" alt="Logo" class="logo-app">
         <h2>Acceso al Sistema</h2>
         <div style="display: flex; flex-direction: column; gap: 15px;">
-            <input type="text" id="user" placeholder="Usuario">
+            <input type="text" id="user" placeholder="Usuario" autocomplete="off">
             <input type="password" id="pass" placeholder="Contraseña">
-            <button onclick="iniciarSesion()">Entrar</button>
+            <button id="btnLogin" onclick="iniciarSesion()">Entrar</button>
         </div>
-        <div id="login-mensaje" style="color: red; font-weight: bold; margin-top: 10px;"></div>
+        <div id="login-mensaje" style="color: var(--color-peligro); font-weight: bold; margin-top: 10px;"></div>
     </div>
 
     <!-- CUERPO CENTRAL -->
@@ -101,7 +154,7 @@
                     <option value="CURP">CURP</option>
                     <option value="Folio">Folio</option>
                 </select>
-                <button onclick="ejecutarBusqueda()">Buscar</button>
+                <button id="btnBuscar" onclick="ejecutarBusqueda()">Buscar</button>
             </div>
             <div id="contenedor-resultados"></div>
         </div>
@@ -126,7 +179,7 @@
                 </div>
                 
                 <div id="area-lote-temporal" style="display:none; margin-top:20px;">
-                    <h4 style="margin:0; color: #37474f;">Registros acumulados listos para enviar (<span id="contador-lote">0</span>):</h4>
+                    <h4 style="margin:0; color: var(--color-gris-oscuro);">Registros acumulados listos para enviar (<span id="contador-lote">0</span>):</h4>
                     <div class="contenedor-tabla">
                         <table class="tabla-lote">
                             <thead>
@@ -145,7 +198,7 @@
         <!-- ADMINISTRADORES -->
         <div id="panel-admin" class="sub-panel">
             
-            <!-- NUEVO: MÓDULO DE REPORTES ESTADÍSTICOS (DASHBOARD) -->
+            <!-- MÓDULO DE REPORTES ESTADÍSTICOS (DASHBOARD) -->
             <div class="panel-bitacora" style="margin-bottom: 25px; background-color: #f0f4f8; border: 1px solid #d9e2ec;">
                 <h3>Módulo de Reportes y Análisis General</h3>
                 <p>Genera análisis en tiempo real aplicando filtros dinámicos basados en la hoja Sheets:</p>
@@ -176,15 +229,15 @@
                         <select id="repFiltroSare"><option value="">Cargando...</option></select>
                     </div>
                     <div style="display: flex; align-items: flex-end; gap: 10px; margin-top: 5px;">
-                        <button onclick="generarReporteAnalitico()" style="background-color: rgb(30, 91, 79);">Filtrar Reporte</button>
+                        <button id="btnFiltrarReporte" onclick="generarReporteAnalitico()" style="background-color: var(--color-primario);">Filtrar Reporte</button>
                         <button onclick="limpiarFiltrosReporte()" style="background-color: #757575;">Ver Todo</button>
                     </div>
                 </div>
 
                 <div id="contenedor-reporte" style="display: none;">
-                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid rgb(156, 35, 72); margin-bottom: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid var(--color-secundario); margin-bottom: 20px;">
                         <h4 style="margin: 0 0 5px 0; color: #333;">Total de Coincidencias en la Base:</h4>
-                        <span id="repTotalRegistros" style="font-size: 24px; font-weight: bold; color: rgb(156, 35, 72);">0</span> registros encontrados.
+                        <span id="repTotalRegistros" style="font-size: 24px; font-weight: bold; color: var(--color-secundario);">0</span> registros encontrados.
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
@@ -200,6 +253,7 @@
                 </div>
             </div>
 
+            <!-- VISUALIZADOR DE BITÁCORA -->
             <div class="panel-bitacora">
                 <h3>Visualizador Estratégico de Bitácora</h3>
                 <p>Filtra y analiza los movimientos realizados en la plataforma en tiempo real:</p>
@@ -241,7 +295,9 @@
     </div>
 
     <script>
-        // REEMPLAZA ESTA URL CON TU ENLACE DE IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
+        // ==========================================
+        // CONFIGURACIÓN PRINCIPAL
+        // ==========================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbxETrTnEb4kFfO47C3KLwus_hdD0J0VGlydNd7ubCrnWFVvSNDVIw3dXnhg_ouvJXHztA/exec';
         
         let usuarioActual = ""; 
@@ -249,14 +305,17 @@
         let datosDispositivo = { ip: "Obteniendo...", ubicacion: "Obteniendo..." };
         let loteTemporal = [];
 
+        // ==========================================
+        // EVENTOS Y ARRANQUE (ONLOAD)
+        // ==========================================
         document.getElementById('pass').addEventListener('keypress', e => { 
             if (e.key === 'Enter') iniciarSesion(); 
         });
         document.getElementById('valorBusqueda').addEventListener('keydown', e => { 
-            if (e.key === 'Enter') e.preventDefault();
+            if (e.key === 'Enter') { e.preventDefault(); ejecutarBusqueda(); }
         });
         document.getElementById('editFolio').addEventListener('keydown', e => { 
-            if (e.key === 'Enter') e.preventDefault();
+            if (e.key === 'Enter') { e.preventDefault(); agregarAlBloqueLocal(); }
         });
 
         window.onload = async function() {
@@ -275,6 +334,9 @@
             }
         };
 
+        // ==========================================
+        // UTILIDADES Y CONEXIÓN
+        // ==========================================
         async function enviarPeticion(datos) {
             datos.usuario = usuarioActual;
             datos.ip = datosDispositivo.ip;
@@ -287,6 +349,30 @@
             return await respuesta.json();
         }
 
+        function escaparHTML(t) { 
+            return t ? String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; 
+        }
+
+        function rellenarSelect(idSelect, datos, textoPorDefecto) {
+            const select = document.getElementById(idSelect);
+            select.innerHTML = `<option value="">${textoPorDefecto}</option>`;
+            
+            if (Array.isArray(datos)) {
+                // Usamos DocumentFragment para optimizar la inyección en el DOM
+                const fragment = document.createDocumentFragment();
+                datos.forEach(item => {
+                    let opt = document.createElement('option');
+                    opt.value = item;
+                    opt.innerText = item;
+                    fragment.appendChild(opt);
+                });
+                select.appendChild(fragment);
+            }
+        }
+
+        // ==========================================
+        // AUTENTICACIÓN Y ROLES
+        // ==========================================
         function configurarVistasPorRol(rol) {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('app-section').style.display = 'block';
@@ -301,7 +387,7 @@
                 document.getElementById('panel-admin').style.display = 'block';
                 cargarUsuariosParaAdmin();
                 cargarFiltrosDesplegablesBitacora();
-                inicializarModuloReportes(); // <-- Inicializar el nuevo módulo al loguearse como ADMIN
+                inicializarModuloReportes();
             }
         }
 
@@ -309,12 +395,17 @@
             const user = document.getElementById('user').value.trim();
             const pass = document.getElementById('pass').value.trim();
             const msj = document.getElementById('login-mensaje');
+            const btn = document.getElementById('btnLogin');
+            
             if (!user || !pass) return msj.innerText = "Por favor, llena ambos campos.";
+            
             msj.innerText = "Validando...";
+            btn.disabled = true;
 
             try {
                 usuarioActual = user;
                 const res = await enviarPeticion({ action: "login", password: pass });
+                
                 if (res.exito) {
                     rolActual = res.rol;
                     sessionStorage.setItem("usuarioActual", user);
@@ -325,11 +416,191 @@
                     msj.innerText = res.error;
                     usuarioActual = "";
                 }
-            } catch (e) { msj.innerText = "Error en conexión con el servidor."; }
+            } catch (e) { 
+                msj.innerText = "Error en conexión con el servidor."; 
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function cerrarSesion() {
+            if(loteTemporal.length > 0 && !confirm("Perderás los cambios no enviados. ¿Salir?")) return;
+            sessionStorage.clear(); 
+            usuarioActual = ""; 
+            rolActual = ""; 
+            loteTemporal = [];
+            
+            // Limpieza visual del estado
+            document.getElementById('contenedor-resultados').innerHTML = '';
+            document.getElementById('contenedor-bitacora').innerHTML = '';
+            document.getElementById('valorBusqueda').value = '';
+            document.getElementById('user').value = '';
+            document.getElementById('pass').value = '';
+            document.getElementById('area-lote-temporal').style.display = 'none';
+            
+            // Retorno a pantalla de login
+            document.getElementById('app-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
         }
 
         // ==========================================
-        // NUEVAS FUNCIONES: MÓDULO DE REPORTES (ADMIN)
+        // MÓDULO DE BÚSQUEDA
+        // ==========================================
+        async function ejecutarBusqueda() {
+            const valor = document.getElementById('valorBusqueda').value.trim();
+            const columna = document.getElementById('columnaBusqueda').value;
+            const contenedor = document.getElementById('contenedor-resultados');
+            const btn = document.getElementById('btnBuscar');
+            
+            if (!valor) return alert("Por favor ingresa un valor.");
+            
+            contenedor.innerHTML = '<p style="font-weight:bold; color: #555;">Consultando base de datos...</p>';
+            btn.disabled = true;
+
+            try {
+                const resultados = await enviarPeticion({ action: "buscar", columna: columna, valor: valor });
+                
+                if (resultados && resultados.error) { 
+                    contenedor.innerHTML = `<p style="color:var(--color-peligro); font-weight:bold;">${escaparHTML(resultados.error)}</p>`; 
+                    return; 
+                }
+                
+                if (!Array.isArray(resultados) || resultados.length === 0) { 
+                    contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; 
+                    return; 
+                }
+
+                let html = `<div class="contenedor-tabla"><table><thead><tr>
+                            <th>FOLIO</th><th>NOMBRE</th><th>ESTATUS</th><th>SARE</th><th>MUNICIPIO</th><th>CCT</th><th>ESCUELA</th><th>NIVEL</th><th>CURP</th><th>MES_REMESA</th><th>OBSERVACIONES</th>
+                            </tr></thead><tbody>`;
+                
+                resultados.forEach(f => {
+                    html += `<tr>
+                                <td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td>
+                                <td>${escaparHTML(f.NOMBRE)}</td>
+                                <td>${escaparHTML(f.ESTATUS)}</td>
+                                <td>${escaparHTML(f.SARE)}</td>
+                                <td>${escaparHTML(f.MUNICIPIO)}</td>
+                                <td>${escaparHTML(f.CCT)}</td>
+                                <td>${escaparHTML(f.ESCUELA)}</td>
+                                <td>${escaparHTML(f.NIVEL)}</td>
+                                <td>${escaparHTML(f.CURP)}</td>
+                                <td>${escaparHTML(f.MES_REMESA)}</td>
+                                <td>${escaparHTML(f.OBSERVACIONES || '')}</td>
+                             </tr>`;
+                });
+                html += '</tbody></table></div>'; 
+                contenedor.innerHTML = html;
+            } catch (error) { 
+                contenedor.innerHTML = '<p style="color:var(--color-peligro); font-weight:bold;">Error de comunicación.</p>'; 
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE EDICIÓN EN LOTES (BLOQUES)
+        // ==========================================
+        function cambiarOpcionesEstatus() {
+            const actividad = document.getElementById('actividadRealizar').value;
+            const contenedorCampos = document.getElementById('campos-edicion');
+            const selectorEstatus = document.getElementById('editEstatus');
+            
+            if(!actividad) { contenedorCampos.style.display = 'none'; return; }
+            
+            contenedorCampos.style.display = 'flex';
+            selectorEstatus.innerHTML = '';
+            
+            let opciones = (actividad === "SOBRANTES") 
+                ? ["SOBRANTE", "SOBRANTE CON OBSERVACIONES"] 
+                : ["ENTREGADA", "ENVIADA A OTRO ESTADO", "ENVIADA A OTRA SARE"];
+            
+            opciones.forEach(opt => {
+                let el = document.createElement('option');
+                el.value = opt; el.innerText = opt;
+                selectorEstatus.appendChild(el);
+            });
+        }
+
+        function agregarAlBloqueLocal() {
+            const folioInput = document.getElementById('editFolio');
+            const estatusInput = document.getElementById('editEstatus');
+            const obsInput = document.getElementById('editObservaciones');
+            const folio = folioInput.value.trim();
+            
+            if(!folio) return alert("Por favor ingresa o escanea un folio.");
+            if(loteTemporal.some(item => item.folio === folio)) return alert("Este folio ya está en la lista de espera.");
+            
+            loteTemporal.push({ folio: folio, estatus: estatusInput.value, observaciones: obsInput.value.trim() });
+            folioInput.value = ""; 
+            obsInput.value = ""; 
+            folioInput.focus();
+            
+            actualizarTablaInterfazLote();
+        }
+
+        function eliminarDelBloqueLocal(index) {
+            loteTemporal.splice(index, 1);
+            actualizarTablaInterfazLote();
+        }
+
+        function actualizarTablaInterfazLote() {
+            const area = document.getElementById('area-lote-temporal');
+            const tbody = document.getElementById('lote-body');
+            document.getElementById('contador-lote').innerText = loteTemporal.length;
+            
+            if(loteTemporal.length === 0) { 
+                area.style.display = 'none'; 
+                tbody.innerHTML = ''; 
+                return; 
+            }
+            
+            area.style.display = 'block'; 
+            tbody.innerHTML = '';
+            
+            loteTemporal.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><b>${escaparHTML(item.folio)}</b></td>
+                                <td>${escaparHTML(item.estatus)}</td>
+                                <td><span style="color:#666; font-style:italic;">${escaparHTML(item.observaciones) || 'Sin observaciones'}</span></td>
+                                <td><button class="btn-del" onclick="eliminarDelBloqueLocal(${index})">Quitar</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function enviarLoteAlServidor() {
+            if(loteTemporal.length === 0) return;
+            const btn = document.getElementById('btnEnviarBloque');
+            
+            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros con Google Sheets?`)) return;
+            
+            const textoOriginal = btn.innerText;
+            btn.innerText = "Procesando matriz a alta velocidad..."; 
+            btn.disabled = true;
+
+            try {
+                const res = await enviarPeticion({ action: "actualizar_lote", lote: loteTemporal });
+                if(res.exito) {
+                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros instantáneamente en Google Sheets.`;
+                    if(res.noEncontrados && res.noEncontrados.length > 0) {
+                        msg += `\n\nFolios no hallados en la base: ${res.noEncontrados.join(", ")}`;
+                    }
+                    alert(msg);
+                    loteTemporal = []; 
+                    actualizarTablaInterfazLote();
+                } else { 
+                    alert("Error: " + res.error); 
+                }
+            } catch(e) { 
+                alert("Error de red o timeout."); 
+            } finally { 
+                btn.innerText = textoOriginal; 
+                btn.disabled = false; 
+            }
+        }
+
+        // ==========================================
+        // MÓDULO DE REPORTES (SOLO ADMIN)
         // ==========================================
         async function inicializarModuloReportes() {
             try {
@@ -342,33 +613,21 @@
                 rellenarSelect('repFiltroCct', filtros.cct, '-- Todos --');
                 rellenarSelect('repFiltroSare', filtros.sare, '-- Todos --');
 
-                // Cargar un reporte global inicial (sin filtros aplicados)
-                generarReporteAnalitico();
+                generarReporteAnalitico(); // Cargar un reporte global inicial
             } catch(e) {
                 console.error("Error al cargar los filtros analíticos:", e);
             }
         }
 
-        function rellenarSelect(idSelect, datos, textoPorDefecto) {
-            const select = document.getElementById(idSelect);
-            select.innerHTML = `<option value="">${textoPorDefecto}</option>`;
-            if (Array.isArray(datos)) {
-                datos.forEach(item => {
-                    let opt = document.createElement('option');
-                    opt.value = item;
-                    opt.innerText = item;
-                    select.appendChild(opt);
-                });
-            }
-        }
-
         async function generarReporteAnalitico() {
             const contenedor = document.getElementById('contenedor-reporte');
+            const btn = document.getElementById('btnFiltrarReporte');
             contenedor.style.display = 'block';
             
             document.getElementById('repTotalRegistros').innerText = "Procesando...";
             document.getElementById('repDesgloseEstatus').innerHTML = "<p>Calculando estadísticas...</p>";
             document.getElementById('repDesgloseRemesa').innerHTML = "<p>Calculando estadísticas...</p>";
+            btn.disabled = true;
 
             try {
                 const res = await enviarPeticion({
@@ -388,8 +647,10 @@
 
             } catch (e) {
                 document.getElementById('repTotalRegistros').innerText = "Error";
-                document.getElementById('repDesgloseEstatus').innerHTML = "<p style='color:red;'>Error de comunicación con Sheets.</p>";
-                document.getElementById('repDesgloseRemesa').innerHTML = "<p style='color:red;'>Error de comunicación con Sheets.</p>";
+                document.getElementById('repDesgloseEstatus').innerHTML = "<p style='color:var(--color-peligro);'>Error de comunicación con Sheets.</p>";
+                document.getElementById('repDesgloseRemesa').innerHTML = "<p style='color:var(--color-peligro);'>Error de comunicación con Sheets.</p>";
+            } finally {
+                btn.disabled = false;
             }
         }
 
@@ -402,7 +663,7 @@
 
             let html = `<div class="contenedor-tabla"><table style="font-size: 13px;">
                         <thead>
-                            <tr style="background:#37474f;">
+                            <tr style="background:var(--color-gris-oscuro);">
                                 <th>${columnaTitulo}</th>
                                 <th style="text-align: right; width: 80px;">Registros</th>
                             </tr>
@@ -413,7 +674,7 @@
             Object.keys(datosObjeto).sort().forEach(key => {
                 html += `<tr>
                             <td><b>${escaparHTML(key)}</b></td>
-                            <td style="text-align: right; font-weight: bold; color: rgb(156, 35, 72);">${datosObjeto[key]}</td>
+                            <td style="text-align: right; font-weight: bold; color: var(--color-secundario);">${datosObjeto[key]}</td>
                          </tr>`;
             });
 
@@ -432,7 +693,7 @@
         }
 
         // ==========================================
-        // FUNCIONES DE BITÁCORA Y SEGURIDAD
+        // MÓDULO DE BITÁCORA Y SEGURIDAD (ADMIN)
         // ==========================================
         async function cargarFiltrosDesplegablesBitacora() {
             const selectFecha = document.getElementById('filtroBitacoraFecha');
@@ -441,24 +702,8 @@
             try {
                 const filtros = await enviarPeticion({ action: "obtener_filtros_bitacora" });
                 
-                selectFecha.innerHTML = '<option value="">-- Todas las fechas --</option>';
-                selectUsuario.innerHTML = '<option value="">-- Todos los usuarios --</option>';
-                
-                if (filtros.fechas && filtros.fechas.length > 0) {
-                    filtros.fechas.forEach(f => {
-                        let opt = document.createElement('option');
-                        opt.value = f; opt.innerText = f;
-                        selectFecha.appendChild(opt);
-                    });
-                }
-                
-                if (filtros.usuarios && filtros.usuarios.length > 0) {
-                    filtros.usuarios.forEach(u => {
-                        let opt = document.createElement('option');
-                        opt.value = u; opt.innerText = u;
-                        selectUsuario.appendChild(opt);
-                    });
-                }
+                rellenarSelect('filtroBitacoraFecha', filtros.fechas, '-- Todas las fechas --');
+                rellenarSelect('filtroBitacoraUsuario', filtros.usuarios, '-- Todos los usuarios --');
             } catch (e) {
                 selectFecha.innerHTML = '<option value="">Error al cargar</option>';
                 selectUsuario.innerHTML = '<option value="">Error al cargar</option>';
@@ -467,7 +712,7 @@
 
         async function consultarBitacoraServidor(fFecha, fUsuario) {
             const contenedor = document.getElementById('contenedor-bitacora');
-            contenedor.innerHTML = '<p style="font-weight:bold; color:#00796b;">Filtrando registros de auditoría...</p>';
+            contenedor.innerHTML = '<p style="font-weight:bold; color:var(--color-primario);">Filtrando registros de auditoría...</p>';
             
             try {
                 const logs = await enviarPeticion({
@@ -477,7 +722,7 @@
                 });
 
                 if(logs.error) {
-                    contenedor.innerHTML = `<p style="color:red; font-weight:bold;">${escaparHTML(logs.error)}</p>`;
+                    contenedor.innerHTML = `<p style="color:var(--color-peligro); font-weight:bold;">${escaparHTML(logs.error)}</p>`;
                     return;
                 }
 
@@ -488,7 +733,7 @@
 
                 let html = `<div class="contenedor-tabla"><table>
                             <thead>
-                                <tr style="background:#004d40; color:white;">
+                                <tr style="background:var(--color-primario); color:white;">
                                     <th>Fecha / Hora</th><th>Usuario</th><th>Acción Ejecutada</th><th>Dirección IP</th><th>Ubicación</th>
                                 </tr>
                             </thead>
@@ -498,7 +743,7 @@
                     html += `<tr>
                                 <td>${escaparHTML(l.fecha)}</td>
                                 <td><b>${escaparHTML(l.usuario)}</b></td>
-                                <td><span style="color:#b71c1c; font-weight:600;">${escaparHTML(l.accion)}</span></td>
+                                <td><span style="color:var(--color-peligro); font-weight:600;">${escaparHTML(l.accion)}</span></td>
                                 <td><code>${escaparHTML(l.ip)}</code></td>
                                 <td><small style="color:#555;">${escaparHTML(l.ubicacion)}</small></td>
                              </tr>`;
@@ -508,7 +753,7 @@
                 contenedor.innerHTML = html;
 
             } catch(e) {
-                contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Error de comunicación al procesar la bitácora.</p>';
+                contenedor.innerHTML = '<p style="color:var(--color-peligro); font-weight:bold;">Error de comunicación al procesar la bitácora.</p>';
             }
         }
 
@@ -530,132 +775,46 @@
             cargarFiltrosDesplegablesBitacora();
         }
 
-        function cambiarOpcionesEstatus() {
-            const actividad = document.getElementById('actividadRealizar').value;
-            const contenedorCampos = document.getElementById('campos-edicion');
-            const selectorEstatus = document.getElementById('editEstatus');
-            if(!actividad) { contenedorCampos.style.display = 'none'; return; }
-            contenedorCampos.style.display = 'flex';
-            selectorEstatus.innerHTML = '';
-            let opciones = (actividad === "SOBRANTES") ? ["SOBRANTE", "SOBRANTE CON OBSERVACIONES"] : ["ENTREGADA", "ENVIADA A OTRO ESTADO", "ENVIADA A OTRA SARE"];
-            opciones.forEach(opt => {
-                let el = document.createElement('option');
-                el.value = opt; el.innerText = opt;
-                selectorEstatus.appendChild(el);
-            });
-        }
-
-        function agregarAlBloqueLocal() {
-            const folioInput = document.getElementById('editFolio');
-            const estatusInput = document.getElementById('editEstatus');
-            const obsInput = document.getElementById('editObservaciones');
-            const folio = folioInput.value.trim();
-            if(!folio) return alert("Por favor ingresa o escanea un folio.");
-            if(loteTemporal.some(item => item.folio === folio)) return alert("Este folio ya está en la lista de espera.");
-            
-            loteTemporal.push({ folio: folio, estatus: estatusInput.value, observaciones: obsInput.value.trim() });
-            folioInput.value = ""; obsInput.value = ""; folioInput.focus();
-            actualizarTablaInterfazLote();
-        }
-
-        function eliminarDelBloqueLocal(index) {
-            loteTemporal.splice(index, 1);
-            actualizarTablaInterfazLote();
-        }
-
-        function actualizarTablaInterfazLote() {
-            const area = document.getElementById('area-lote-temporal');
-            const tbody = document.getElementById('lote-body');
-            document.getElementById('contador-lote').innerText = loteTemporal.length;
-            if(loteTemporal.length === 0) { area.style.display = 'none'; tbody.innerHTML = ''; return; }
-            area.style.display = 'block'; tbody.innerHTML = '';
-            loteTemporal.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><b>${escaparHTML(item.folio)}</b></td><td>${escaparHTML(item.estatus)}</td>
-                                <td><span style="color:#666; font-style:italic;">${escaparHTML(item.observaciones) || 'Sin observaciones'}</span></td>
-                                <td><button class="btn-del" onclick="eliminarDelBloqueLocal(${index})">Quitar</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function enviarLoteAlServidor() {
-            if(loteTemporal.length === 0) return;
-            const btn = document.getElementById('btnEnviarBloque');
-            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros con Google Sheets?`)) return;
-            btn.innerText = "Procesando matriz a alta velocidad..."; btn.disabled = true;
-
-            try {
-                const res = await enviarPeticion({ action: "actualizar_lote", lote: loteTemporal });
-                if(res.exito) {
-                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros instantáneamente en Google Sheets.`;
-                    if(res.noEncontrados.length > 0) msg += `\n\nFolios no hallados en la base: ${res.noEncontrados.join(", ")}`;
-                    alert(msg);
-                    loteTemporal = []; actualizarTablaInterfazLote();
-                } else { alert("Error: " + res.error); }
-            } catch(e) { alert("Error de red o timeout."); } 
-            finally { btn.innerText = "🚀 Enviar todo el Bloque a Sheets"; btn.disabled = false; }
-        }
-
         async function cargarUsuariosParaAdmin() {
             const select = document.getElementById('listaUsuariosAdmin');
             try {
                 const usuarios = await enviarPeticion({ action: "obtener_usuarios" });
                 if(usuarios.error) return select.innerHTML = `<option>${escaparHTML(usuarios.error)}</option>`;
+                
                 select.innerHTML = '';
+                const fragment = document.createDocumentFragment();
+                
                 usuarios.forEach(u => {
                     if(u.usuario !== usuarioActual) {
-                        let opt = document.createElement('option'); opt.value = u.usuario;
-                        opt.innerText = `${u.usuario} [${u.estado}]`; select.appendChild(opt);
+                        let opt = document.createElement('option'); 
+                        opt.value = u.usuario;
+                        opt.innerText = `${u.usuario} [${u.estado}]`; 
+                        fragment.appendChild(opt);
                     }
                 });
-            } catch(e) { select.innerHTML = '<option>Error al cargar usuarios</option>'; }
+                select.appendChild(fragment);
+            } catch(e) { 
+                select.innerHTML = '<option>Error al cargar usuarios</option>'; 
+            }
         }
 
         async function ejecutarBloqueo() {
             const userParaBloquear = document.getElementById('listaUsuariosAdmin').value;
             if(!userParaBloquear || userParaBloquear.includes("Cargando")) return alert("Selecciona un usuario válido.");
+            
             if(!confirm(`¿Revocar acceso permanentemente a ${userParaBloquear}?`)) return;
+            
             try {
                 const res = await enviarPeticion({ action: "bloquear_usuario", usuarioAQuitar: userParaBloquear });
-                if(res.exito) { alert("Usuario bloqueado."); cargarUsuariosParaAdmin(); }
-            } catch(e) { alert("Error."); }
-        }
-
-        function escaparHTML(t) { return t ? String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
-
-        async function ejecutarBusqueda() {
-            const valor = document.getElementById('valorBusqueda').value.trim();
-            const columna = document.getElementById('columnaBusqueda').value;
-            const contenedor = document.getElementById('contenedor-resultados');
-            if (!valor) return alert("Por favor ingresa un valor.");
-            contenedor.innerHTML = '<p style="font-weight:bold; color: #555;">Consultando base de datos...</p>';
-
-            try {
-                const resultados = await enviarPeticion({ action: "buscar", columna: columna, valor: valor });
-                if (resultados && resultados.error) { contenedor.innerHTML = `<p style="color:red; font-weight:bold;">${escaparHTML(resultados.error)}</p>`; return; }
-                if (!Array.isArray(resultados) || resultados.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
-
-                let html = `<div class="contenedor-tabla"><table><thead><tr>
-                            <th>FOLIO</th><th>NOMBRE</th><th>ESTATUS</th><th>SARE</th><th>MUNICIPIO</th><th>CCT</th><th>ESCUELA</th><th>NIVEL</th><th>CURP</th><th>MES_REMESA</th><th>OBSERVACIONES</th>
-                            </tr></thead><tbody>`;
-                resultados.forEach(f => {
-                    html += `<tr><td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td><td>${escaparHTML(f.NOMBRE)}</td><td>${escaparHTML(f.ESTATUS)}</td>
-                             <td>${escaparHTML(f.SARE)}</td><td>${escaparHTML(f.MUNICIPIO)}</td><td>${escaparHTML(f.CCT)}</td><td>${escaparHTML(f.ESCUELA)}</td>
-                             <td>${escaparHTML(f.NIVEL)}</td><td>${escaparHTML(f.CURP)}</td><td>${escaparHTML(f.MES_REMESA)}</td><td>${escaparHTML(f.OBSERVACIONES || '')}</td></tr>`;
-                });
-                html += '</tbody></table></div>'; contenedor.innerHTML = html;
-            } catch (error) { contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Error de comunicación.</p>'; }
-        }
-
-        async function cerrarSesion() {
-            if(loteTemporal.length > 0 && !confirm("Perderás los cambios no enviados. ¿Salir?")) return;
-            sessionStorage.clear(); usuarioActual = ""; rolActual = ""; loteTemporal = [];
-            document.getElementById('contenedor-resultados').innerHTML = '';
-            document.getElementById('contenedor-bitacora').innerHTML = '';
-            document.getElementById('valorBusqueda').value = '';
-            document.getElementById('area-lote-temporal').style.display = 'none';
-            document.getElementById('app-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
+                if(res.exito) { 
+                    alert("Usuario bloqueado con éxito."); 
+                    cargarUsuariosParaAdmin(); 
+                } else {
+                    alert("Ocurrió un error al intentar bloquear al usuario.");
+                }
+            } catch(e) { 
+                alert("Error de comunicación con el servidor."); 
+            }
         }
     </script>
 </body>
