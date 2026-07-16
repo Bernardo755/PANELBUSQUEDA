@@ -724,6 +724,104 @@
                 alert("❌ Error de red al comunicar con el servidor."); 
             }
         }
+
+<!-- ================= MÓDULO DE GESTIÓN DE USUARIOS Y BITÁCORA ================= -->
+<div id="seccion-admin-avanzado" style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
+  
+  <h2>Panel de Administración Avanzado</h2>
+  <hr>
+
+  <!-- Subsección: Crear y Reactivar Usuarios -->
+  <div class="admin-grid" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+    
+    <!-- Crear Usuario -->
+    <div class="card-admin" style="flex: 1; min-width: 280px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+      <h3>Crear Nuevo Usuario</h3>
+      <div style="margin-bottom: 10px;">
+        <label>Usuario:</label>
+        <input type="text" id="reg-usuario" placeholder="Ej. juan.perez" style="width: 100%; padding: 6px; margin-top: 4px;">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label>Contraseña:</label>
+        <input type="password" id="reg-password" placeholder="••••••••" style="width: 100%; padding: 6px; margin-top: 4px;">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label>Rol:</label>
+        <select id="reg-rol" style="width: 100%; padding: 6px; margin-top: 4px;">
+          <option value="Usuario">Usuario Standard</option>
+          <option value="Admin">Administrador</option>
+        </select>
+      </div>
+      <button onclick="crearUsuario()" style="background-color: #28a745; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; width: 100%;">
+        Crear Usuario
+      </button>
+    </div>
+
+    <!-- Reactivar / Desbloquear Usuario -->
+    <div class="card-admin" style="flex: 1; min-width: 280px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; background: #fff; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h3>Reactivar Usuario</h3>
+        <p style="font-size: 0.9em; color: #666;">Ingresa el nombre exacto del usuario bloqueado para devolverle el acceso.</p>
+        <div style="margin-bottom: 10px;">
+          <label>Usuario a Reactivar:</label>
+          <input type="text" id="reactivar-usuario-name" placeholder="Ej. juan.perez" style="width: 100%; padding: 6px; margin-top: 4px;">
+        </div>
+      </div>
+      <button onclick="reactivarUsuario()" style="background-color: #007bff; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; width: 100%;">
+        Reactivar Acceso
+      </button>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- Subsección: Visualizador de Bitácora -->
+  <div class="bitacora-seccion" style="margin-top: 20px;">
+    <h3>Bitácora de Acciones</h3>
+    
+    <!-- Filtros de búsqueda para la bitácora -->
+    <div class="filtros-bitacora" style="display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; flex-wrap: wrap;">
+      <div>
+        <label style="display:block; font-size: 0.85em;">Filtrar por Fecha:</label>
+        <select id="filtro-fecha" style="padding: 6px; min-width: 150px;"><option value="">Todas las fechas</option></select>
+      </div>
+      <div>
+        <label style="display:block; font-size: 0.85em;">Filtrar por Usuario:</label>
+        <select id="filtro-usuario" style="padding: 6px; min-width: 150px;"><option value="">Todos los usuarios</option></select>
+      </div>
+      <button onclick="cargarBitacora()" style="background-color: #17a2b8; color: white; border: none; padding: 7px 15px; cursor: pointer; border-radius: 4px;">
+        Consultar / Filtrar
+      </button>
+      <button onclick="cargarFiltrosBitacora()" style="background-color: #6c757d; color: white; border: none; padding: 7px 15px; cursor: pointer; border-radius: 4px;">
+        Recargar Filtros
+      </button>
+    </div>
+
+    <!-- Tabla donde se renderiza la bitácora -->
+    <div style="overflow-x: auto; max-height: 400px; border: 1px solid #ddd; background: white;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9em;">
+        <thead>
+          <tr style="background-color: #f1f1f1; position: sticky; top: 0;">
+            <th style="padding: 10px; border-bottom: 2px solid #ddd;">Fecha y Hora</th>
+            <th style="padding: 10px; border-bottom: 2px solid #ddd;">Usuario</th>
+            <th style="padding: 10px; border-bottom: 2px solid #ddd;">Acción</th>
+            <th style="padding: 10px; border-bottom: 2px solid #ddd;">IP</th>
+            <th style="padding: 10px; border-bottom: 2px solid #ddd;">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-bitacora-cuerpo">
+          <tr>
+            <td colspan="5" style="padding: 15px; text-align: center; color: #999;">Usa los filtros o presiona "Consultar" para ver el historial.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+        
     </script>
 </body>
 </html>
