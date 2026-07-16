@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE BUSQUEDA</title>
+    <title>Sistema Control de Registros</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,11 +23,12 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             text-align: center;
             width: 95%;
-            max-width: 950px;
+            max-width: 1050px; /* Ampliado para mejor visualización de tablas anchas */
             margin-bottom: 20px;
         }
         .logo-app { 
-            width: 50%; 
+            width: 40%; 
+            max-width: 250px;
             height: auto; 
             margin-bottom: 20px;
         }
@@ -46,11 +47,23 @@
         }
         .form-edicion { flex-direction: column; max-width: 600px; margin: 15px auto 0 auto; }
         
-        input, select, button, textarea { padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; }
+        input, select, button, textarea { 
+            padding: 12px; 
+            font-size: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: rgb(30, 91, 79);
+            box-shadow: 0 0 0 3px rgba(30, 91, 79, 0.15);
+        }
         textarea { resize: vertical; font-family: inherit; }
         
-        button { background-color: rgb(156, 35, 72); color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        button:hover { background-color: rgb(120, 25, 55); }
+        button { background-color: rgb(156, 35, 72); color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: rgb(120, 25, 55); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
         
         .btn-add { background-color: #2e7d32; }
         .btn-add:hover { background-color: #1b5e20; }
@@ -62,14 +75,67 @@
         .panel-bloqueo { background-color: #ffebee; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px; margin-top: 20px; }
         .panel-bitacora { background-color: #f5f5f5; border: 1px solid #e0e0e0; padding: 20px; border-radius: 8px; }
 
-        .contenedor-tabla { overflow-x: auto; margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; background: white; }
-        th { background: rgb(30, 91, 79); color: white; padding: 12px; text-transform: uppercase; }
-        td { padding: 10px; border-bottom: 1px solid #eee; white-space: nowrap; color: #333;}
-        tr:hover { background-color: #f1f8e9; }
+        /* --- DISEÑO DE TABLAS Y CONTENEDORES --- */
+        .contenedor-tabla { 
+            overflow-x: auto; 
+            margin-top: 20px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; text-align: left; }
+        th { 
+            background: rgb(24, 73, 63); 
+            color: white; 
+            padding: 14px 16px; 
+            text-transform: uppercase; 
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        td { padding: 12px 16px; border-bottom: 1px solid #eff2f1; white-space: nowrap; color: #333; }
+        tr:hover { background-color: rgba(30, 91, 79, 0.04); }
         
         .tabla-lote th { background: #37474f; }
-        .btn-del { background: #c62828; padding: 5px 10px; font-size: 12px; }
+        .btn-del { background: #c62828; padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+        .btn-del:hover { background: #b71c1c; }
+
+        /* --- SISTEMA DE RESALTADO DE ESTATUS (BADGES) --- */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 12px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        /* Entregadas: Verdes */
+        .status-badge-entregada {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        /* Sobrantes: Rojos */
+        .status-badge-sobrante {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        /* Envíos/Intermedios: Azules */
+        .status-badge-envio {
+            background-color: #e1f5fe;
+            color: #0277bd;
+            border: 1px solid #81d4fa;
+        }
+        /* Predeterminado / Desconocido */
+        .status-badge-default {
+            background-color: #f5f5f5;
+            color: #616161;
+            border: 1px solid #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -137,7 +203,7 @@
                             <tbody id="lote-body"></tbody>
                         </table>
                     </div>
-                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque a Sheets</button>
+                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque</button>
                 </div>
             </div>
         </div>
@@ -188,7 +254,6 @@
     <script>
         // CONFIGURACIONES Y VARIABLES GLOBALES
         const API_URL = 'https://script.google.com/macros/s/AKfycby91cMqc3L51m_Cog52xMAolilZUjGL0WREIe18nu2vY35eltVx7Yp0nBx9yJ9LktOg8w/exec';
-        //https://script.google.com/macros/s/AKfycbxETrTnEb4kFfO47C3KLwus_hdD0J0VGlydNd7ubCrnWFVvSNDVIw3dXnhg_ouvJXHztA/exec (VERSION 15)
         let usuarioActual = ""; 
         let rolActual = "";
         let datosDispositivo = { ip: "Obteniendo...", ubicacion: "Obteniendo..." };
@@ -199,13 +264,10 @@
         const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000; // 15 minutos en milisegundos
 
         function iniciarTemporizadorInactividad() {
-            // Reinicia el contador si ya existía
             detenerTemporizadorInactividad();
-            // Escucha eventos de actividad
             document.addEventListener('mousemove', resetearTemporizador);
             document.addEventListener('keypress', resetearTemporizador);
             document.addEventListener('click', resetearTemporizador);
-            // Inicia el contador
             timerInactividad = setTimeout(cerrarSesionPorInactividad, TIEMPO_LIMITE_INACTIVIDAD);
         }
 
@@ -225,7 +287,6 @@
             alert("Tu sesión ha expirado por inactividad.");
             cerrarSesion();
         }
-        // ------------------------------------------
 
         document.getElementById('pass').addEventListener('keypress', e => { 
             if (e.key === 'Enter') iniciarSesion(); 
@@ -272,7 +333,6 @@
             document.getElementById('panel-edicion').style.display = 'none';
             document.getElementById('panel-admin').style.display = 'none';
 
-            // Iniciar temporizador de seguridad al entrar
             iniciarTemporizadorInactividad();
 
             if (rol === "ATENCION" || rol === "ADMIN") {
@@ -467,7 +527,7 @@
                     loteTemporal = []; actualizarTablaInterfazLote();
                 } else { alert("Error: " + res.error); }
             } catch(e) { alert("Error de red o timeout."); } 
-            finally { btn.innerText = "🚀 Enviar todo el Bloque"; btn.disabled = false; }
+            finally { btn.innerText = "🚀 Enviar todo el Bloque a Sheets"; btn.disabled = false; }
         }
 
         async function cargarUsuariosParaAdmin() {
@@ -497,6 +557,24 @@
 
         function escaparHTML(t) { return t ? String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
 
+        // --- SISTEMA DE CONTROL DE ESTATUS VISUAL ---
+        function obtenerBadgeEstatus(estatus) {
+            if (!estatus) return `<span class="status-badge status-badge-default">S/E</span>`;
+            
+            const estatusMayus = estatus.toUpperCase().trim();
+            let claseEstatus = 'status-badge-default';
+
+            if (estatusMayus.includes('ENTREGADA')) {
+                claseEstatus = 'status-badge-entregada';
+            } else if (estatusMayus.includes('SOBRANTE')) {
+                claseEstatus = 'status-badge-sobrante';
+            } else if (estatusMayus.includes('ENVIADA') || estatusMayus.includes('OTRO') || estatusMayus.includes('SARE')) {
+                claseEstatus = 'status-badge-envio';
+            }
+
+            return `<span class="status-badge ${claseEstatus}">${escaparHTML(estatus)}</span>`;
+        }
+
         async function ejecutarBusqueda() {
             const valor = document.getElementById('valorBusqueda').value.trim();
             const columna = document.getElementById('columnaBusqueda').value;
@@ -510,30 +588,38 @@
                 if (!Array.isArray(resultados) || resultados.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
 
                 let html = `<div class="contenedor-tabla"><table><thead><tr>
-                            <th>FOLIO</th><th>NOMBRE</th><th>ESTATUS</th><th>SARE</th><th>MUNICIPIO</th><th>CCT</th><th>ESCUELA</th><th>NIVEL</th><th>CURP</th><th>MES_REMESA</th><th>OBSERVACIONES</th>
+                            <th>FOLIO</th><th>NOMBRE</th><th>ESTATUS</th><th>SARE</th><th>MUNICIPIO</th><th>CCT</th><th>ESCUELA</th><th>NIVEL</th><th>CURP</th><th>MES REMESA</th><th>OBSERVACIONES</th>
                             </tr></thead><tbody>`;
                 resultados.forEach(f => {
-                    html += `<tr><td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td><td>${escaparHTML(f.NOMBRE)}</td><td>${escaparHTML(f.ESTATUS)}</td>
-                             <td>${escaparHTML(f.SARE)}</td><td>${escaparHTML(f.MUNICIPIO)}</td><td>${escaparHTML(f.CCT)}</td><td>${escaparHTML(f.ESCUELA)}</td>
-                             <td>${escaparHTML(f.NIVEL)}</td><td>${escaparHTML(f.CURP)}</td><td>${escaparHTML(f.MES_REMESA)}</td><td>${escaparHTML(f.OBSERVACIONES || '')}</td></tr>`;
+                    const estatusHTML = obtenerBadgeEstatus(f.ESTATUS);
+                    
+                    html += `<tr>
+                                <td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td>
+                                <td>${escaparHTML(f.NOMBRE)}</td>
+                                <td>${estatusHTML}</td>
+                                <td>${escaparHTML(f.SARE)}</td>
+                                <td>${escaparHTML(f.MUNICIPIO)}</td>
+                                <td>${escaparHTML(f.CCT)}</td>
+                                <td>${escaparHTML(f.ESCUELA)}</td>
+                                <td>${escaparHTML(f.NIVEL)}</td>
+                                <td>${escaparHTML(f.CURP)}</td>
+                                <td>${escaparHTML(f.MES_REMESA)}</td>
+                                <td><small style="color:#666;">${escaparHTML(f.OBSERVACIONES || '')}</small></td>
+                             </tr>`;
                 });
                 html += '</tbody></table></div>'; contenedor.innerHTML = html;
             } catch (error) { contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Error de comunicación.</p>'; }
         }
 
         async function cerrarSesion() {
-            // Detener el temporizador de seguridad
             detenerTemporizadorInactividad();
             
             if(loteTemporal.length > 0 && !confirm("Perderás los cambios no enviados. ¿Salir?")) {
-                // Si decide no salir, reiniciamos el temporizador
                 iniciarTemporizadorInactividad();
                 return;
             }
-            // Limpiar datos
             sessionStorage.clear(); usuarioActual = ""; rolActual = ""; loteTemporal = [];
             
-            // Limpiar inputs de login
             document.getElementById('user').value = '';
             document.getElementById('pass').value = '';
 
