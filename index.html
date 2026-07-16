@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Control de Registros</title>
+    <title>SISTEMA DE BUSQUEDA</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -146,7 +146,7 @@
         <div id="panel-admin" class="sub-panel">
             
             <div class="panel-bitacora">
-                <h3>Visualizador Estratégico de Bitácora</h3>
+                <h3>Visualizador de Bitácora</h3>
                 <p>Filtra y analiza los movimientos realizados en la plataforma en tiempo real:</p>
                 
                 <div style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; background: #e0f2f1; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -187,7 +187,8 @@
 
     <script>
         // CONFIGURACIONES Y VARIABLES GLOBALES
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxETrTnEb4kFfO47C3KLwus_hdD0J0VGlydNd7ubCrnWFVvSNDVIw3dXnhg_ouvJXHztA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby91cMqc3L51m_Cog52xMAolilZUjGL0WREIe18nu2vY35eltVx7Yp0nBx9yJ9LktOg8w/exec';
+        //https://script.google.com/macros/s/AKfycbxETrTnEb4kFfO47C3KLwus_hdD0J0VGlydNd7ubCrnWFVvSNDVIw3dXnhg_ouvJXHztA/exec (VERSION 15)
         let usuarioActual = ""; 
         let rolActual = "";
         let datosDispositivo = { ip: "Obteniendo...", ubicacion: "Obteniendo..." };
@@ -454,19 +455,19 @@
         async function enviarLoteAlServidor() {
             if(loteTemporal.length === 0) return;
             const btn = document.getElementById('btnEnviarBloque');
-            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros con Google Sheets?`)) return;
-            btn.innerText = "Procesando matriz a alta velocidad..."; btn.disabled = true;
+            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros?`)) return;
+            btn.innerText = "Procesando matriz..."; btn.disabled = true;
 
             try {
                 const res = await enviarPeticion({ action: "actualizar_lote", lote: loteTemporal });
                 if(res.exito) {
-                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros instantáneamente en Google Sheets.`;
+                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros.`;
                     if(res.noEncontrados.length > 0) msg += `\n\nFolios no hallados en la base: ${res.noEncontrados.join(", ")}`;
                     alert(msg);
                     loteTemporal = []; actualizarTablaInterfazLote();
                 } else { alert("Error: " + res.error); }
             } catch(e) { alert("Error de red o timeout."); } 
-            finally { btn.innerText = "🚀 Enviar todo el Bloque a Sheets"; btn.disabled = false; }
+            finally { btn.innerText = "🚀 Enviar todo el Bloque"; btn.disabled = false; }
         }
 
         async function cargarUsuariosParaAdmin() {
