@@ -264,7 +264,7 @@
         // ==========================================
         // CONFIGURACIÓN PRINCIPAL
         // ==========================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw9LrCtL6I_yFM1XBeaCcqBczb8LKJio4vPCqRbAeiuFUFqYn5X6KR2MWL5kEZ_XXNt-Q/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzTE5AtRKOEBDsLBYVqakfPy8jO3WaoaI4pEmJ4hVDMsGgVblXoUFKm7CFKquOY_ucGDQ/exec';
         
         let usuarioActual = ""; 
         let rolActual = "";
@@ -724,6 +724,53 @@
                 alert("❌ Error de red al comunicar con el servidor."); 
             }
         }
+
+//<!-- ========================================== -->
+//<!-- MÓDULO DE GESTIÓN DE USUARIOS (ADMIN)      -->
+//<!-- ========================================== -->
+<div class="contenedor-gestion-usuarios">
+    
+    <!-- SECCIÓN: CREAR NUEVO USUARIO -->
+    <div class="tarjeta-admin">
+        <h3>👤 Crear Nuevo Usuario</h3>
+        <div>
+            <input type="text" id="nuevoUsuarioNombre" placeholder="Nombre de usuario" autocomplete="off">
+            <input type="password" id="nuevoUsuarioPassword" placeholder="Contraseña">
+            <select id="nuevoUsuarioRol">
+                <option value="">-- Selecciona un Rol --</option>
+                <option value="Admin">Administrador</option>
+                <option value="Usuario">Usuario Estándar</option>
+            </select>
+            <button onclick="ejecutarCreacion()">Crear Usuario</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN: BLOQUEAR USUARIO -->
+    <div class="tarjeta-admin">
+        <h3>🛑 Bloquear Usuario</h3>
+        <div>
+            <select id="listaUsuariosAdmin">
+                <option value="">-- Cargando usuarios... --</option>
+            </select>
+            <button onclick="ejecutarBloqueo()" style="background-color: var(--color-peligro); color: white;">Bloquear Acceso</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN: REACTIVAR USUARIO -->
+    <div class="tarjeta-admin">
+        <h3>✅ Reactivar Usuario</h3>
+        <div>
+            <!-- Usamos un select distinto para los usuarios bloqueados -->
+            <select id="listaUsuariosBloqueados">
+                <option value="">-- Cargando usuarios... --</option>
+            </select>
+            <button onclick="ejecutarReactivacion()" style="background-color: var(--color-exito); color: white;">Restaurar Acceso</button>
+        </div>
+    </div>
+
+</div>
+
+        
     </script>
 </body>
 </html>
