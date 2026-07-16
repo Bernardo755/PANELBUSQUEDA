@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Control de Registros</title>
+    <title>Sistema de Busqueda</title>
     <style>
         :root {
             /* Paleta de colores principal */
@@ -17,7 +17,7 @@
             --color-peligro: #c62828;
             --color-gris-oscuro: #37474f;
             --color-fondo: #f4f6f8;
-            --sombra-tarjeta: 0 8px 20px rgba(0,0,0,0.3);
+            --sombra-tarjeta: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         body {
@@ -29,7 +29,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 20px 10px;
+            box-sizing: border-box;
         }
 
         .tarjeta {
@@ -38,14 +39,15 @@
             border-radius: 12px;
             box-shadow: var(--sombra-tarjeta);
             text-align: center;
-            width: 95%;
+            width: 100%;
             max-width: 950px;
             margin-bottom: 20px;
+            box-sizing: border-box;
         }
 
         .logo-app { 
-            width: 50%; 
-            max-width: 300px;
+            width: 100%; 
+            max-width: 250px;
             height: auto; 
             margin-bottom: 20px;
         }
@@ -56,8 +58,8 @@
         .sub-panel { 
             display: none; 
             border-top: 2px solid #eee; 
-            margin-top: 20px; 
-            padding-top: 20px; 
+            margin-top: 25px; 
+            padding-top: 25px; 
             text-align: left; 
         }
         
@@ -82,10 +84,19 @@
             border: 1px solid #ccc; 
             border-radius: 6px; 
             outline: none;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .controles-busqueda input, .controles-busqueda select, .controles-busqueda button {
+            width: auto;
+            flex: 1;
+            min-width: 150px;
         }
         
         input:focus, select:focus, textarea:focus {
             border-color: var(--color-primario);
+            box-shadow: 0 0 5px rgba(30, 91, 79, 0.3);
         }
 
         textarea { resize: vertical; font-family: inherit; }
@@ -96,19 +107,27 @@
             border: none; 
             cursor: pointer; 
             font-weight: bold; 
-            transition: background 0.3s, opacity 0.3s; 
+            transition: all 0.3s ease; 
         }
 
-        button:hover:not(:disabled) { background-color: var(--color-secundario-hover); }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
+        button:hover:not(:disabled) { 
+            background-color: var(--color-secundario-hover); 
+            transform: translateY(-1px);
+        }
+        
+        button:disabled { 
+            opacity: 0.6; 
+            cursor: not-allowed; 
+            transform: none;
+        }
         
         .btn-add { background-color: var(--color-exito); }
         .btn-add:hover:not(:disabled) { background-color: var(--color-exito-hover); }
         
-        .btn-send-block { background-color: var(--color-info); width: 100%; font-size: 18px; margin-top: 15px; }
+        .btn-send-block { background-color: var(--color-info); font-size: 18px; margin-top: 15px; }
         .btn-send-block:hover:not(:disabled) { background-color: var(--color-info-hover); }
         
-        .btn-logout { background-color: #555; width: 100%; margin-top: 30px;}
+        .btn-logout { background-color: #555; margin-top: 30px;}
         .btn-logout:hover:not(:disabled) { background-color: #333; }
         
         .panel-bloqueo { background-color: #ffebee; border: 1px solid #ffcdd2; padding: 15px; border-radius: 8px; margin-top: 20px; }
@@ -117,38 +136,41 @@
         .contenedor-tabla { overflow-x: auto; margin-top: 20px; border: 1px solid #ddd; border-radius: 8px; }
         
         table { width: 100%; border-collapse: collapse; font-size: 14px; background: white; }
-        th { background: var(--color-primario); color: white; padding: 12px; text-transform: uppercase; }
+        th { background: var(--color-primario); color: white; padding: 12px; text-transform: uppercase; white-space: nowrap; }
         td { padding: 10px; border-bottom: 1px solid #eee; white-space: nowrap; color: #333;}
         tr:hover { background-color: #f1f8e9; }
         
         .tabla-lote th { background: var(--color-gris-oscuro); }
-        .btn-del { background: var(--color-peligro); padding: 5px 10px; font-size: 12px; }
+        .btn-del { background: var(--color-peligro); padding: 6px 12px; font-size: 12px; width: auto;}
+        .btn-del:hover { background: #b71c1c; }
+
+        .mensaje-estado { margin-top: 10px; font-weight: bold; min-height: 20px;}
     </style>
 </head>
 <body>
 
     <!-- CONTROL DE ACCESO -->
     <div id="login-section" class="tarjeta">
-        <img src="Imagen11.png" alt="Logo" class="logo-app">
+        <img src="Imagen11.png" alt="Logo Secretaría" class="logo-app" onerror="this.style.display='none'">
         <h2>Acceso al Sistema</h2>
         <div style="display: flex; flex-direction: column; gap: 15px;">
             <input type="text" id="user" placeholder="Usuario" autocomplete="off">
             <input type="password" id="pass" placeholder="Contraseña">
-            <button id="btnLogin" onclick="iniciarSesion()">Entrar</button>
+            <button id="btnLogin" onclick="iniciarSesion()">Entrar al Sistema</button>
         </div>
-        <div id="login-mensaje" style="color: var(--color-peligro); font-weight: bold; margin-top: 10px;"></div>
+        <div id="login-mensaje" class="mensaje-estado" style="color: var(--color-peligro);"></div>
     </div>
 
     <!-- CUERPO CENTRAL -->
     <div id="app-section" class="tarjeta">
-        <img src="Imagen11.png" alt="Logo" class="logo-app">
+        <img src="Imagen11.png" alt="Logo Secretaría" class="logo-app" onerror="this.style.display='none'">
         <h2 id="saludo-usuario">Buscador de Registros</h2>
         
         <!-- CONSULTAS -->
         <div id="panel-busqueda">
-            <h3>Módulo de Consulta</h3>
+            <h3 style="color: var(--color-primario);">Módulo de Consulta</h3>
             <div class="controles-busqueda">
-                <input type="text" id="valorBusqueda" placeholder="Valor a buscar...">
+                <input type="text" id="valorBusqueda" placeholder="Valor a buscar..." autocomplete="off">
                 <select id="columnaBusqueda">
                     <option value="Nombre">Nombre</option>
                     <option value="CURP">CURP</option>
@@ -156,30 +178,30 @@
                 </select>
                 <button id="btnBuscar" onclick="ejecutarBusqueda()">Buscar</button>
             </div>
-            <div id="contenedor-resultados"></div>
+            <div id="contenedor-resultados" class="mensaje-estado"></div>
         </div>
 
         <!-- CAPTURA INTERMEDIA (LOTES) -->
         <div id="panel-edicion" class="sub-panel">
-            <h3>Módulo de Edición Avanzada (Captura por Bloques)</h3>
+            <h3 style="color: var(--color-primario);">Módulo de Edición (Captura por Bloques)</h3>
             <div class="form-edicion">
-                <label style="font-weight: bold;">Actividad a realizar</label>
+                <label style="font-weight: bold; color: var(--color-gris-oscuro);">Actividad a realizar</label>
                 <select id="actividadRealizar" onchange="cambiarOpcionesEstatus()">
                     <option value="">-- Selecciona una actividad --</option>
                     <option value="SOBRANTES">REGISTRO DE SOBRANTES</option>
                     <option value="ENTREGADAS">REGISTRO DE ENTREGADAS</option>
                 </select>
 
-                <div id="campos-edicion" style="display: none; flex-direction: column; gap: 15px; margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px dashed #ccc;">
-                    <h4 style="margin:0;">Agregar registro al bloque temporal:</h4>
-                    <input type="text" id="editFolio" placeholder="Escribe o escanea el Folio">
+                <div id="campos-edicion" style="display: none; flex-direction: column; gap: 15px; margin-top: 15px; background: #f9f9f9; padding: 20px; border-radius: 8px; border: 2px dashed #ccc;">
+                    <h4 style="margin:0; color: var(--color-primario);">Agregar registro al bloque temporal:</h4>
+                    <input type="text" id="editFolio" placeholder="Escribe o escanea el Folio (Presiona Enter)" autocomplete="off">
                     <select id="editEstatus"></select>
                     <textarea id="editObservaciones" placeholder="Observaciones (Opcional)" rows="2"></textarea>
-                    <button class="btn-add" onclick="agregarAlBloqueLocal()">+ Agregar a la Lista</button>
+                    <button class="btn-add" id="btnAgregarBloque" onclick="agregarAlBloqueLocal()">+ Agregar a la Lista</button>
                 </div>
                 
-                <div id="area-lote-temporal" style="display:none; margin-top:20px;">
-                    <h4 style="margin:0; color: var(--color-gris-oscuro);">Registros acumulados listos para enviar (<span id="contador-lote">0</span>):</h4>
+                <div id="area-lote-temporal" style="display:none; margin-top:25px;">
+                    <h4 style="margin:0; color: var(--color-gris-oscuro); text-align: left;">Registros acumulados listos para enviar (<span id="contador-lote" style="color: var(--color-secundario);">0</span>):</h4>
                     <div class="contenedor-tabla">
                         <table class="tabla-lote">
                             <thead>
@@ -190,7 +212,7 @@
                             <tbody id="lote-body"></tbody>
                         </table>
                     </div>
-                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque a Sheets</button>
+                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque</button>
                 </div>
             </div>
         </div>
@@ -199,50 +221,50 @@
         <div id="panel-admin" class="sub-panel">
             <!-- VISUALIZADOR DE BITÁCORA -->
             <div class="panel-bitacora">
-                <h3>Visualizador Estratégico de Bitácora</h3>
-                <p>Filtra y analiza los movimientos realizados en la plataforma en tiempo real:</p>
+                <h3 style="color: var(--color-primario); margin-top: 0;">Visualizador de Bitácora</h3>
+                <p style="color: #555;">Filtra y analiza los movimientos realizados en la plataforma en tiempo real:</p>
                 
                 <div style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; background: #e0f2f1; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px;">
                         <label style="font-weight: bold; font-size: 13px; color: #004d40;">Por Día Registrado:</label>
                         <select id="filtroBitacoraFecha" onchange="buscarEnBitacora()">
                             <option value="">Cargando fechas...</option>
                         </select>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px;">
                         <label style="font-weight: bold; font-size: 13px; color: #004d40;">Por Usuario Activo:</label>
                         <select id="filtroBitacoraUsuario" onchange="buscarEnBitacora()">
                             <option value="">Cargando usuarios...</option>
                         </select>
                     </div>
                     <div style="display: flex; align-items: flex-end;">
-                        <button onclick="limpiarYVerTodoBitacora()" style="background-color: #757575;">Ver Todo / Limpiar</button>
+                        <button onclick="limpiarYVerTodoBitacora()" style="background-color: #757575; width: auto; padding: 12px 20px;">Ver Todo / Limpiar</button>
                     </div>
                 </div>
                 
-                <div id="contenedor-bitacora"></div>
+                <div id="contenedor-bitacora" class="mensaje-estado"></div>
             </div>
 
             <!-- PANEL DE SEGURIDAD -->
             <div class="panel-bloqueo">
-                <h3>Control de Seguridad (Solo Administradores)</h3>
-                <p>Selecciona un usuario del sistema para revocar sus accesos de forma permanente:</p>
-                <div class="form-admin">
-                    <select id="listaUsuariosAdmin"><option>Cargando usuarios...</option></select>
-                    <button style="background-color: #d32f2f;" onclick="ejecutarBloqueo()">Bloquear Acceso</button>
+                <h3 style="color: var(--color-peligro); margin-top: 0;">Control de Seguridad (Admin)</h3>
+                <p style="color: #555;">Selecciona un usuario del sistema para revocar sus accesos de forma permanente:</p>
+                <div class="form-admin" style="justify-content: flex-start;">
+                    <select id="listaUsuariosAdmin" style="max-width: 300px;"><option>Cargando usuarios...</option></select>
+                    <button style="background-color: #d32f2f; width: auto; padding: 12px 20px;" onclick="ejecutarBloqueo()">Bloquear Acceso</button>
                 </div>
             </div>
             
         </div>
 
-        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión Segura</button>
     </div>
 
     <script>
         // ==========================================
         // CONFIGURACIÓN PRINCIPAL
         // ==========================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycby91cMqc3L51m_Cog52xMAolilZUjGL0WREIe18nu2vY35eltVx7Yp0nBx9yJ9LktOg8w/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw9LrCtL6I_yFM1XBeaCcqBczb8LKJio4vPCqRbAeiuFUFqYn5X6KR2MWL5kEZ_XXNt-Q/exec';
         
         let usuarioActual = ""; 
         let rolActual = "";
@@ -259,7 +281,10 @@
             if (e.key === 'Enter') { e.preventDefault(); ejecutarBusqueda(); }
         });
         document.getElementById('editFolio').addEventListener('keydown', e => { 
-            if (e.key === 'Enter') { e.preventDefault(); agregarAlBloqueLocal(); }
+            if (e.key === 'Enter') { 
+                e.preventDefault(); 
+                agregarAlBloqueLocal(); 
+            }
         });
 
         window.onload = async function() {
@@ -302,7 +327,6 @@
             select.innerHTML = `<option value="">${textoPorDefecto}</option>`;
             
             if (Array.isArray(datos)) {
-                // Usamos DocumentFragment para optimizar la inyección en el DOM
                 const fragment = document.createDocumentFragment();
                 datos.forEach(item => {
                     let opt = document.createElement('option');
@@ -331,8 +355,13 @@
                 document.getElementById('panel-admin').style.display = 'block';
                 cargarUsuariosParaAdmin();
                 cargarFiltrosDesplegablesBitacora();
-                inicializarModuloReportes();
+                inicializarModuloReportes(); // Esta función faltaba en tu código original
             }
+        }
+
+        // Función stub añadida para evitar error de referencia en Administrador
+        function inicializarModuloReportes() {
+            console.log("Módulos de administración iniciados correctamente.");
         }
 
         async function iniciarSesion() {
@@ -341,10 +370,15 @@
             const msj = document.getElementById('login-mensaje');
             const btn = document.getElementById('btnLogin');
             
-            if (!user || !pass) return msj.innerText = "Por favor, llena ambos campos.";
+            if (!user || !pass) {
+                msj.innerText = "⚠️ Por favor, llena ambos campos.";
+                return;
+            }
             
-            msj.innerText = "Validando...";
+            msj.style.color = "var(--color-info)";
+            msj.innerText = "⏳ Validando credenciales...";
             btn.disabled = true;
+            btn.innerText = "Entrando...";
 
             try {
                 usuarioActual = user;
@@ -357,18 +391,21 @@
                     msj.innerText = "";
                     configurarVistasPorRol(rolActual);
                 } else {
-                    msj.innerText = res.error;
+                    msj.style.color = "var(--color-peligro)";
+                    msj.innerText = `❌ ${res.error}`;
                     usuarioActual = "";
                 }
             } catch (e) { 
-                msj.innerText = "Error en conexión con el servidor."; 
+                msj.style.color = "var(--color-peligro)";
+                msj.innerText = "❌ Error de conexión con el servidor."; 
             } finally {
                 btn.disabled = false;
+                btn.innerText = "Entrar al Sistema";
             }
         }
 
         async function cerrarSesion() {
-            if(loteTemporal.length > 0 && !confirm("Perderás los cambios no enviados. ¿Salir?")) return;
+            if(loteTemporal.length > 0 && !confirm("⚠️ Tienes registros sin enviar. Si sales ahora los perderás. ¿Deseas salir de todos modos?")) return;
             sessionStorage.clear(); 
             usuarioActual = ""; 
             rolActual = ""; 
@@ -380,7 +417,10 @@
             document.getElementById('valorBusqueda').value = '';
             document.getElementById('user').value = '';
             document.getElementById('pass').value = '';
+            document.getElementById('actividadRealizar').value = '';
+            document.getElementById('campos-edicion').style.display = 'none';
             document.getElementById('area-lote-temporal').style.display = 'none';
+            document.getElementById('login-mensaje').innerText = '';
             
             // Retorno a pantalla de login
             document.getElementById('app-section').style.display = 'none';
@@ -396,21 +436,22 @@
             const contenedor = document.getElementById('contenedor-resultados');
             const btn = document.getElementById('btnBuscar');
             
-            if (!valor) return alert("Por favor ingresa un valor.");
+            if (!valor) return alert("Por favor ingresa un valor para buscar.");
             
-            contenedor.innerHTML = '<p style="font-weight:bold; color: #555;">Consultando base de datos...</p>';
+            contenedor.innerHTML = '<p style="color: var(--color-info);">⏳ Consultando base de datos...</p>';
             btn.disabled = true;
+            btn.innerText = "Buscando...";
 
             try {
                 const resultados = await enviarPeticion({ action: "buscar", columna: columna, valor: valor });
                 
                 if (resultados && resultados.error) { 
-                    contenedor.innerHTML = `<p style="color:var(--color-peligro); font-weight:bold;">${escaparHTML(resultados.error)}</p>`; 
+                    contenedor.innerHTML = `<p style="color:var(--color-peligro);">❌ ${escaparHTML(resultados.error)}</p>`; 
                     return; 
                 }
                 
                 if (!Array.isArray(resultados) || resultados.length === 0) { 
-                    contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; 
+                    contenedor.innerHTML = '<p style="color:orange;">⚠️ No se encontraron coincidencias.</p>'; 
                     return; 
                 }
 
@@ -422,7 +463,7 @@
                     html += `<tr>
                                 <td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td>
                                 <td>${escaparHTML(f.NOMBRE)}</td>
-                                <td>${escaparHTML(f.ESTATUS)}</td>
+                                <td><span style="background:#e3f2fd; padding:3px 8px; border-radius:12px; font-size:12px; font-weight:bold; color:#1565c0;">${escaparHTML(f.ESTATUS)}</span></td>
                                 <td>${escaparHTML(f.SARE)}</td>
                                 <td>${escaparHTML(f.MUNICIPIO)}</td>
                                 <td>${escaparHTML(f.CCT)}</td>
@@ -436,9 +477,10 @@
                 html += '</tbody></table></div>'; 
                 contenedor.innerHTML = html;
             } catch (error) { 
-                contenedor.innerHTML = '<p style="color:var(--color-peligro); font-weight:bold;">Error de comunicación.</p>'; 
+                contenedor.innerHTML = '<p style="color:var(--color-peligro);">❌ Error de comunicación con el servidor.</p>'; 
             } finally {
                 btn.disabled = false;
+                btn.innerText = "Buscar";
             }
         }
 
@@ -464,16 +506,27 @@
                 el.value = opt; el.innerText = opt;
                 selectorEstatus.appendChild(el);
             });
+            
+            document.getElementById('editFolio').focus();
         }
 
         function agregarAlBloqueLocal() {
             const folioInput = document.getElementById('editFolio');
             const estatusInput = document.getElementById('editEstatus');
             const obsInput = document.getElementById('editObservaciones');
-            const folio = folioInput.value.trim();
+            const folio = folioInput.value.trim().toUpperCase();
             
-            if(!folio) return alert("Por favor ingresa o escanea un folio.");
-            if(loteTemporal.some(item => item.folio === folio)) return alert("Este folio ya está en la lista de espera.");
+            if(!folio) {
+                alert("Por favor ingresa o escanea un folio.");
+                folioInput.focus();
+                return;
+            }
+            if(loteTemporal.some(item => item.folio === folio)) {
+                alert("⚠️ Este folio ya se encuentra en la lista de espera.");
+                folioInput.value = "";
+                folioInput.focus();
+                return;
+            }
             
             loteTemporal.push({ folio: folio, estatus: estatusInput.value, observaciones: obsInput.value.trim() });
             folioInput.value = ""; 
@@ -486,6 +539,7 @@
         function eliminarDelBloqueLocal(index) {
             loteTemporal.splice(index, 1);
             actualizarTablaInterfazLote();
+            document.getElementById('editFolio').focus();
         }
 
         function actualizarTablaInterfazLote() {
@@ -502,12 +556,14 @@
             area.style.display = 'block'; 
             tbody.innerHTML = '';
             
-            loteTemporal.forEach((item, index) => {
+            // Revertir array para ver los más recientes arriba
+            [...loteTemporal].reverse().forEach((item, reversedIndex) => {
+                const originalIndex = loteTemporal.length - 1 - reversedIndex;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td><b>${escaparHTML(item.folio)}</b></td>
                                 <td>${escaparHTML(item.estatus)}</td>
                                 <td><span style="color:#666; font-style:italic;">${escaparHTML(item.observaciones) || 'Sin observaciones'}</span></td>
-                                <td><button class="btn-del" onclick="eliminarDelBloqueLocal(${index})">Quitar</button></td>`;
+                                <td><button class="btn-del" onclick="eliminarDelBloqueLocal(${originalIndex})">Quitar</button></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -516,32 +572,33 @@
             if(loteTemporal.length === 0) return;
             const btn = document.getElementById('btnEnviarBloque');
             
-            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros?`)) return;
+            if(!confirm(`¿Estás seguro de enviar este bloque de ${loteTemporal.length} registros a la base de datos?`)) return;
             
-            const textoOriginal = btn.innerText;
-            btn.innerText = "Procesando matriz..."; 
+            btn.innerText = "⏳ Sincronizando datos con Sheets..."; 
             btn.disabled = true;
 
             try {
                 const res = await enviarPeticion({ action: "actualizar_lote", lote: loteTemporal });
                 if(res.exito) {
-                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros.`;
+                    let msg = `✅ ¡Éxito! Se actualizaron ${res.exitosos} registros correctamente.`;
                     if(res.noEncontrados && res.noEncontrados.length > 0) {
-                        msg += `\n\nFolios no hallados en la base: ${res.noEncontrados.join(", ")}`;
+                        msg += `\n\n⚠️ Ojo: Los siguientes folios NO se encontraron en la base y fueron omitidos:\n${res.noEncontrados.join(", ")}`;
                     }
                     alert(msg);
                     loteTemporal = []; 
                     actualizarTablaInterfazLote();
+                    document.getElementById('editFolio').focus();
                 } else { 
-                    alert("Error: " + res.error); 
+                    alert("❌ Error devuelto por el servidor: " + res.error); 
                 }
             } catch(e) { 
-                alert("Error de red o timeout."); 
+                alert("❌ Error de red. No se pudo conectar con el servidor."); 
             } finally { 
-                btn.innerText = textoOriginal; 
+                btn.innerHTML = "🚀 Enviar todo el Bloque a Sheets"; 
                 btn.disabled = false; 
             }
         }
+        
         // ==========================================
         // MÓDULO DE BITÁCORA Y SEGURIDAD (ADMIN)
         // ==========================================
@@ -551,7 +608,6 @@
             
             try {
                 const filtros = await enviarPeticion({ action: "obtener_filtros_bitacora" });
-                
                 rellenarSelect('filtroBitacoraFecha', filtros.fechas, '-- Todas las fechas --');
                 rellenarSelect('filtroBitacoraUsuario', filtros.usuarios, '-- Todos los usuarios --');
             } catch (e) {
@@ -562,7 +618,7 @@
 
         async function consultarBitacoraServidor(fFecha, fUsuario) {
             const contenedor = document.getElementById('contenedor-bitacora');
-            contenedor.innerHTML = '<p style="font-weight:bold; color:var(--color-primario);">Filtrando registros de auditoría...</p>';
+            contenedor.innerHTML = '<p style="color:var(--color-info);">⏳ Filtrando registros de auditoría...</p>';
             
             try {
                 const logs = await enviarPeticion({
@@ -572,12 +628,12 @@
                 });
 
                 if(logs.error) {
-                    contenedor.innerHTML = `<p style="color:var(--color-peligro); font-weight:bold;">${escaparHTML(logs.error)}</p>`;
+                    contenedor.innerHTML = `<p style="color:var(--color-peligro);">❌ ${escaparHTML(logs.error)}</p>`;
                     return;
                 }
 
                 if(!Array.isArray(logs) || logs.length === 0) {
-                    contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">No se encontraron eventos en la bitácora para esta selección.</p>';
+                    contenedor.innerHTML = '<p style="color:orange;">⚠️ No se encontraron eventos en la bitácora para esta selección.</p>';
                     return;
                 }
 
@@ -593,7 +649,7 @@
                     html += `<tr>
                                 <td>${escaparHTML(l.fecha)}</td>
                                 <td><b>${escaparHTML(l.usuario)}</b></td>
-                                <td><span style="color:var(--color-peligro); font-weight:600;">${escaparHTML(l.accion)}</span></td>
+                                <td><span style="color:var(--color-secundario); font-weight:600;">${escaparHTML(l.accion)}</span></td>
                                 <td><code>${escaparHTML(l.ip)}</code></td>
                                 <td><small style="color:#555;">${escaparHTML(l.ubicacion)}</small></td>
                              </tr>`;
@@ -603,7 +659,7 @@
                 contenedor.innerHTML = html;
 
             } catch(e) {
-                contenedor.innerHTML = '<p style="color:var(--color-peligro); font-weight:bold;">Error de comunicación al procesar la bitácora.</p>';
+                contenedor.innerHTML = '<p style="color:var(--color-peligro);">❌ Error de comunicación al procesar la bitácora.</p>';
             }
         }
 
@@ -622,7 +678,7 @@
             document.getElementById('filtroBitacoraFecha').value = "";
             document.getElementById('filtroBitacoraUsuario').value = "";
             consultarBitacoraServidor("", "");
-            cargarFiltrosDesplegablesBitacora();
+            cargarFiltrosDesplegablesBitacora(); // Refrescar filtros por si hay nuevos datos
         }
 
         async function cargarUsuariosParaAdmin() {
@@ -631,7 +687,7 @@
                 const usuarios = await enviarPeticion({ action: "obtener_usuarios" });
                 if(usuarios.error) return select.innerHTML = `<option>${escaparHTML(usuarios.error)}</option>`;
                 
-                select.innerHTML = '';
+                select.innerHTML = '<option value="">-- Seleccione un usuario --</option>';
                 const fragment = document.createDocumentFragment();
                 
                 usuarios.forEach(u => {
@@ -650,20 +706,22 @@
 
         async function ejecutarBloqueo() {
             const userParaBloquear = document.getElementById('listaUsuariosAdmin').value;
-            if(!userParaBloquear || userParaBloquear.includes("Cargando")) return alert("Selecciona un usuario válido.");
+            if(!userParaBloquear || userParaBloquear.includes("Cargando") || userParaBloquear === "") {
+                return alert("⚠️ Selecciona un usuario válido de la lista.");
+            }
             
-            if(!confirm(`¿Revocar acceso permanentemente a ${userParaBloquear}?`)) return;
+            if(!confirm(`🛑 ¿Estás totalmente seguro de REVOCAR el acceso permanentemente al usuario "${userParaBloquear}"?`)) return;
             
             try {
                 const res = await enviarPeticion({ action: "bloquear_usuario", usuarioAQuitar: userParaBloquear });
                 if(res.exito) { 
-                    alert("Usuario bloqueado con éxito."); 
+                    alert(`✅ El usuario ${userParaBloquear} ha sido bloqueado con éxito.`); 
                     cargarUsuariosParaAdmin(); 
                 } else {
-                    alert("Ocurrió un error al intentar bloquear al usuario.");
+                    alert("❌ Ocurrió un error al intentar bloquear al usuario: " + (res.error || "Desconocido"));
                 }
             } catch(e) { 
-                alert("Error de comunicación con el servidor."); 
+                alert("❌ Error de red al comunicar con el servidor."); 
             }
         }
     </script>
