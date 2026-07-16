@@ -197,62 +197,6 @@
 
         <!-- ADMINISTRADORES -->
         <div id="panel-admin" class="sub-panel">
-            
-            <!-- MÓDULO DE REPORTES ESTADÍSTICOS (DASHBOARD) -->
-            <div class="panel-bitacora" style="margin-bottom: 25px; background-color: #f0f4f8; border: 1px solid #d9e2ec;">
-                <h3>Módulo de Reportes y Análisis General</h3>
-                <p>Genera análisis en tiempo real aplicando filtros dinámicos basados en la hoja Sheets:</p>
-                
-                <div style="display: flex; flex-direction: row; gap: 12px; flex-wrap: wrap; background: #d9e2ec; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">Remesa:</label>
-                        <select id="repFiltroRemesa"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">Estatus:</label>
-                        <select id="repFiltroEstatus"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">Programa / Nivel:</label>
-                        <select id="repFiltroPrograma"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">Municipio:</label>
-                        <select id="repFiltroMunicipio"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">CCT:</label>
-                        <select id="repFiltroCct"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 130px;">
-                        <label style="font-weight: bold; font-size: 13px; color: #102a43;">SARE:</label>
-                        <select id="repFiltroSare"><option value="">Cargando...</option></select>
-                    </div>
-                    <div style="display: flex; align-items: flex-end; gap: 10px; margin-top: 5px;">
-                        <button id="btnFiltrarReporte" onclick="generarReporteAnalitico()" style="background-color: var(--color-primario);">Filtrar Reporte</button>
-                        <button onclick="limpiarFiltrosReporte()" style="background-color: #757575;">Ver Todo</button>
-                    </div>
-                </div>
-
-                <div id="contenedor-reporte" style="display: none;">
-                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid var(--color-secundario); margin-bottom: 20px;">
-                        <h4 style="margin: 0 0 5px 0; color: #333;">Total de Coincidencias en la Base:</h4>
-                        <span id="repTotalRegistros" style="font-size: 24px; font-weight: bold; color: var(--color-secundario);">0</span> registros encontrados.
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                        <div>
-                            <h4 style="margin: 0 0 10px 0; color: #243b53; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Desglose por Estatus</h4>
-                            <div id="repDesgloseEstatus"></div>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0 0 10px 0; color: #243b53; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Desglose por Remesa</h4>
-                            <div id="repDesgloseRemesa"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- VISUALIZADOR DE BITÁCORA -->
             <div class="panel-bitacora">
                 <h3>Visualizador Estratégico de Bitácora</h3>
