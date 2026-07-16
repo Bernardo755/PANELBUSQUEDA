@@ -242,7 +242,7 @@
         // ==========================================
         // CONFIGURACIÓN PRINCIPAL
         // ==========================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxETrTnEb4kFfO47C3KLwus_hdD0J0VGlydNd7ubCrnWFVvSNDVIw3dXnhg_ouvJXHztA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycby91cMqc3L51m_Cog52xMAolilZUjGL0WREIe18nu2vY35eltVx7Yp0nBx9yJ9LktOg8w/exec';
         
         let usuarioActual = ""; 
         let rolActual = "";
@@ -516,16 +516,16 @@
             if(loteTemporal.length === 0) return;
             const btn = document.getElementById('btnEnviarBloque');
             
-            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros con Google Sheets?`)) return;
+            if(!confirm(`¿Deseas sincronizar este bloque de ${loteTemporal.length} registros?`)) return;
             
             const textoOriginal = btn.innerText;
-            btn.innerText = "Procesando matriz a alta velocidad..."; 
+            btn.innerText = "Procesando matriz..."; 
             btn.disabled = true;
 
             try {
                 const res = await enviarPeticion({ action: "actualizar_lote", lote: loteTemporal });
                 if(res.exito) {
-                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros instantáneamente en Google Sheets.`;
+                    let msg = `¡Éxito total! Se actualizaron ${res.exitosos} registros.`;
                     if(res.noEncontrados && res.noEncontrados.length > 0) {
                         msg += `\n\nFolios no hallados en la base: ${res.noEncontrados.join(", ")}`;
                     }
@@ -542,100 +542,6 @@
                 btn.disabled = false; 
             }
         }
-
-        // ==========================================
-        // MÓDULO DE REPORTES (SOLO ADMIN)
-        // ==========================================
-        async function inicializarModuloReportes() {
-            try {
-                const filtros = await enviarPeticion({ action: "obtener_filtros_analisis" });
-                
-                rellenarSelect('repFiltroRemesa', filtros.remesa, '-- Todas --');
-                rellenarSelect('repFiltroEstatus', filtros.estatus, '-- Todos --');
-                rellenarSelect('repFiltroPrograma', filtros.programa, '-- Todos --');
-                rellenarSelect('repFiltroMunicipio', filtros.municipio, '-- Todos --');
-                rellenarSelect('repFiltroCct', filtros.cct, '-- Todos --');
-                rellenarSelect('repFiltroSare', filtros.sare, '-- Todos --');
-
-                generarReporteAnalitico(); // Cargar un reporte global inicial
-            } catch(e) {
-                console.error("Error al cargar los filtros analíticos:", e);
-            }
-        }
-
-        async function generarReporteAnalitico() {
-            const contenedor = document.getElementById('contenedor-reporte');
-            const btn = document.getElementById('btnFiltrarReporte');
-            contenedor.style.display = 'block';
-            
-            document.getElementById('repTotalRegistros').innerText = "Procesando...";
-            document.getElementById('repDesgloseEstatus').innerHTML = "<p>Calculando estadísticas...</p>";
-            document.getElementById('repDesgloseRemesa').innerHTML = "<p>Calculando estadísticas...</p>";
-            btn.disabled = true;
-
-            try {
-                const res = await enviarPeticion({
-                    action: "ejecutar_analisis_base",
-                    fRemesa: document.getElementById('repFiltroRemesa').value,
-                    fEstatus: document.getElementById('repFiltroEstatus').value,
-                    fPrograma: document.getElementById('repFiltroPrograma').value,
-                    fMunicipio: document.getElementById('repFiltroMunicipio').value,
-                    fCct: document.getElementById('repFiltroCct').value,
-                    fSare: document.getElementById('repFiltroSare').value
-                });
-
-                document.getElementById('repTotalRegistros').innerText = res.total || 0;
-                
-                dibujarTablaDesglose('repDesgloseEstatus', res.breakdownEstatus, 'Estatus');
-                dibujarTablaDesglose('repDesgloseRemesa', res.breakdownRemesa, 'Remesa');
-
-            } catch (e) {
-                document.getElementById('repTotalRegistros').innerText = "Error";
-                document.getElementById('repDesgloseEstatus').innerHTML = "<p style='color:var(--color-peligro);'>Error de comunicación con Sheets.</p>";
-                document.getElementById('repDesgloseRemesa').innerHTML = "<p style='color:var(--color-peligro);'>Error de comunicación con Sheets.</p>";
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
-        function dibujarTablaDesglose(idContenedor, datosObjeto, columnaTitulo) {
-            const div = document.getElementById(idContenedor);
-            if (!datosObjeto || Object.keys(datosObjeto).length === 0) {
-                div.innerHTML = "<p style='color:gray; font-style:italic;'>Sin datos para los filtros seleccionados.</p>";
-                return;
-            }
-
-            let html = `<div class="contenedor-tabla"><table style="font-size: 13px;">
-                        <thead>
-                            <tr style="background:var(--color-gris-oscuro);">
-                                <th>${columnaTitulo}</th>
-                                <th style="text-align: right; width: 80px;">Registros</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-            
-            // Ordenamos alfabéticamente por etiqueta
-            Object.keys(datosObjeto).sort().forEach(key => {
-                html += `<tr>
-                            <td><b>${escaparHTML(key)}</b></td>
-                            <td style="text-align: right; font-weight: bold; color: var(--color-secundario);">${datosObjeto[key]}</td>
-                         </tr>`;
-            });
-
-            html += `</tbody></table></div>`;
-            div.innerHTML = html;
-        }
-
-        function limpiarFiltrosReporte() {
-            document.getElementById('repFiltroRemesa').value = "";
-            document.getElementById('repFiltroEstatus').value = "";
-            document.getElementById('repFiltroPrograma').value = "";
-            document.getElementById('repFiltroMunicipio').value = "";
-            document.getElementById('repFiltroCct').value = "";
-            document.getElementById('repFiltroSare').value = "";
-            generarReporteAnalitico();
-        }
-
         // ==========================================
         // MÓDULO DE BITÁCORA Y SEGURIDAD (ADMIN)
         // ==========================================
