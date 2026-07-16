@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE BUSQUEDA</title>
+    <title>Sistema Control de Registros</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -137,7 +137,7 @@
                             <tbody id="lote-body"></tbody>
                         </table>
                     </div>
-                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque</button>
+                    <button class="btn-send-block" id="btnEnviarBloque" onclick="enviarLoteAlServidor()">🚀 Enviar todo el Bloque a Sheets</button>
                 </div>
             </div>
         </div>
@@ -146,7 +146,7 @@
         <div id="panel-admin" class="sub-panel">
             
             <div class="panel-bitacora">
-                <h3>Visualizador de Bitácora</h3>
+                <h3>Visualizador Estratégico de Bitácora</h3>
                 <p>Filtra y analiza los movimientos realizados en la plataforma en tiempo real:</p>
                 
                 <div style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; background: #e0f2f1; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -529,7 +529,13 @@
                 iniciarTemporizadorInactividad();
                 return;
             }
+            // Limpiar datos
             sessionStorage.clear(); usuarioActual = ""; rolActual = ""; loteTemporal = [];
+            
+            // Limpiar inputs de login
+            document.getElementById('user').value = '';
+            document.getElementById('pass').value = '';
+
             document.getElementById('contenedor-resultados').innerHTML = '';
             document.getElementById('contenedor-bitacora').innerHTML = '';
             document.getElementById('valorBusqueda').value = '';
