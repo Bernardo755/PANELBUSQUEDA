@@ -177,7 +177,7 @@
 
         <!-- CAPTURA INTERMEDIA (LOTES) -->
         <div id="panel-edicion" class="sub-panel">
-            <h3>Módulo de Edición Avanzada (Captura por Bloques)</h3>
+            <h3>Módulo de Edición (Captura por Bloques)</h3>
             <div class="form-edicion">
                 <label style="font-weight: bold;">Actividad a realizar</label>
                 <select id="actividadRealizar" onchange="cambiarOpcionesEstatus()">
@@ -244,7 +244,7 @@
                 <h3>Control de Seguridad (Solo Administradores)</h3>
                 <p>Selecciona un usuario del sistema para revocar sus accesos de forma permanente:</p>
                 <div class="form-admin">
-                    <select id="listaUsuariosAdmin"><option>Cargando usuarios...</option></select>
+                    <select <option value="">-- Selecciona una actividad --</option> id="listaUsuariosAdmin"><option>Cargando usuarios...</option></select>
                     <button style="background-color: #d32f2f;" onclick="ejecutarBloqueo()">Bloquear Acceso</button>
                 </div>
             </div>
