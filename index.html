@@ -16,18 +16,6 @@
             min-height: 100vh;
             padding: 20px 0;
         }
-
-.contenedor-gif {
-            background-color: black; /* Fondo negro para el contenedor del GIF */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-        }
-        .contenedor-gif img {
-            max-width: 100%;
-            height: auto;
-            display: block; /* Elimina espacio extra debajo de la imagen */
-        }
         
         .tarjeta {
             background: white;
@@ -168,7 +156,7 @@
     <!-- CUERPO CENTRAL -->
     <div id="app-section" class="tarjeta">
         <img src="Imagen11.png" alt="Logo" class="logo-app">
-       <img src="user___Imagen4t (5).gif" alt="saludo"> 
+      
         <h2 id="saludo-usuario">Buscador de Registros</h2>
         
         <!-- CONSULTAS -->
@@ -182,6 +170,7 @@
                     <option value="Folio">Folio</option>
                 </select>
                 <button onclick="ejecutarBusqueda()">Buscar</button>
+                 <img src="user___Imagen4t (5).gif" alt="saludo"> 
             </div>
             <div id="contenedor-resultados"></div>
         </div>
